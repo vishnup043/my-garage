@@ -60,7 +60,7 @@ const App: React.FC = () => {
   const handleViewHistory = (customerId: string) => {
     setFilterCustomerId(customerId);
     setSearchTerm('');
-    setCurrentView('jobs');
+    setCurrentView('service');
   };
 
   const handleClearFilter = () => {
@@ -119,7 +119,7 @@ const App: React.FC = () => {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <NavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard />} label="Dashboard" />
-          <NavButton active={currentView === 'jobs'} onClick={() => setCurrentView('jobs')} icon={<Car />} label="Active Jobs" />
+          <NavButton active={currentView === 'service'} onClick={() => setCurrentView('service')} icon={<Car />} label="Active Jobs" />
           <NavButton active={currentView === 'customers'} onClick={() => { setCurrentView('customers'); setFilterCustomerId(null); }} icon={<Users />} label="Customers" />
           <NavButton active={currentView === 'marketing'} onClick={() => { setCurrentView('marketing'); setFilterCustomerId(null); }} icon={<Megaphone />} label="Marketing" />
           <NavButton active={currentView === 'add-job'} onClick={handleAddNew} icon={<PlusCircle />} label="New Service" />
@@ -133,7 +133,7 @@ const App: React.FC = () => {
 
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200 px-4 py-3 lg:px-8 flex items-center justify-between">
         <div className="lg:hidden flex items-center gap-2">
-          <Wrench className="text-blue-600 w-6 h-6" /> <span className="font-bold text-lg">KM Automobiles</span>
+          <span className="font-bold text-lg">KM Automobiles</span>
         </div>
         <div className="hidden lg:block text-2xl font-black text-gray-800 capitalize tracking-tight">
           {editingJobId ? 'Modify Record' : currentView.replace('-', ' ')}
@@ -154,15 +154,15 @@ const App: React.FC = () => {
 
       <main className="p-4 lg:p-8 max-w-7xl mx-auto">
         {currentView === 'dashboard' && <Dashboard onNavigate={setCurrentView} />}
-        {currentView === 'jobs' && <JobList searchTerm={searchTerm} onEditJob={handleEditJob} filterCustomerId={filterCustomerId} onClearFilter={handleClearFilter} />}
+        {currentView === 'service' && <JobList searchTerm={searchTerm} onEditJob={handleEditJob} filterCustomerId={filterCustomerId} onClearFilter={handleClearFilter} />}
         {currentView === 'customers' && <CustomerList searchTerm={searchTerm} onViewHistory={handleViewHistory} />}
         {currentView === 'marketing' && <MarketingView onBack={() => setCurrentView('dashboard')} />}
-        {currentView === 'add-job' && <AddJobForm jobId={editingJobId} onSuccess={() => { setEditingJobId(null); setCurrentView('jobs'); }} />}
+        {currentView === 'add-job' && <AddJobForm jobId={editingJobId} onSuccess={() => { setEditingJobId(null); setCurrentView('service'); }} />}
       </main>
 
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-200 flex items-center justify-around px-2 py-3 z-50 shadow-2xl">
-        <MobileNavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard size={22} />} label="Home" />
-        <MobileNavButton active={currentView === 'jobs'} onClick={() => setCurrentView('jobs')} icon={<Car size={22} />} label="Jobs" />
+        <MobileNavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard size={22} />} label="Dashboard" />
+        <MobileNavButton active={currentView === 'service'} onClick={() => setCurrentView('service')} icon={<Car size={22} />} label="service" />
         <div className="relative -top-6">
           <button onClick={handleAddNew} className="bg-blue-600 text-white p-4 rounded-[1.5rem] shadow-xl shadow-blue-300 ring-8 ring-slate-50 active:scale-90 transition transform"><PlusCircle size={28} /></button>
         </div>

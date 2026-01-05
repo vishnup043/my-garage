@@ -205,7 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         <div className="lg:col-span-2 bg-white p-6 md:p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-xl font-black text-gray-800 tracking-tight">Fleet Activity</h2>
+              <h2 className="text-xl font-black text-gray-800 tracking-tight">Service Status</h2>
               <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">Status for {currentLabel}</p>
             </div>
             <button 
@@ -223,7 +223,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 const isInProgress = job.status === JobStatus.IN_PROGRESS;
                 
                 return (
-                  <div key={job.id} className="flex items-center gap-4 group cursor-pointer p-3 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 border border-transparent hover:border-blue-100 rounded-2xl transition-all duration-300" onClick={() => onNavigate('jobs')}>
+                  <div key={job.id} className="flex items-center gap-4 group cursor-pointer p-3 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:shadow-blue-500/5 border border-transparent hover:border-blue-100 rounded-2xl transition-all duration-300" onClick={() => onNavigate('service')}>
                     <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 ${
                       isFinished ? 'bg-green-100 text-green-600 shadow-sm' : 
                       isInProgress ? 'bg-amber-100 text-amber-600 shadow-sm' : 'bg-gray-100 text-gray-400 shadow-sm'
@@ -279,7 +279,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <div className="space-y-3 flex-1">
               {stats.overdueList.length > 0 ? (
                 stats.overdueList.map(job => (
-                  <div key={job.id} onClick={() => onNavigate('jobs')} className="p-3 bg-red-50/50 border border-red-100 rounded-2xl hover:bg-white hover:shadow-md transition-all cursor-pointer group">
+                  <div key={job.id} onClick={() => onNavigate('service')} className="p-3 bg-red-50/50 border border-red-100 rounded-2xl hover:bg-white hover:shadow-md transition-all cursor-pointer group">
                     <div className="flex justify-between items-start mb-1">
                       <p className="text-xs font-black text-gray-800 uppercase">{job.vehicleNumber}</p>
                       <span className="text-[8px] font-black text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full uppercase">Delay</span>
@@ -299,7 +299,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 </div>
               )}
               {stats.overdueCount > 5 && (
-                <button onClick={() => onNavigate('jobs')} className="w-full text-center py-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">
+                <button onClick={() => onNavigate('service')} className="w-full text-center py-2 text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">
                   View all overdue tasks
                 </button>
               )}
