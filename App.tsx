@@ -16,7 +16,9 @@ import {
   FileText,
   Settings,
   BarChart3,
-  Building2
+  Building2,
+  Menu,
+  X
 } from 'lucide-react';
 // Fixed: Removed non-existent 'Vehicle' import
 import { AppView, Job, Customer, JobStatus } from './types';
@@ -40,6 +42,7 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingJobId, setEditingJobId] = useState<string | null>(null);
   const [filterCustomerId, setFilterCustomerId] = useState<string | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Initialize DB connection
   useEffect(() => {
@@ -151,7 +154,13 @@ const App: React.FC = () => {
       </aside>
 
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200 px-4 py-3 lg:px-8 flex items-center justify-between">
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-3">
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg transition transform active:scale-90"
+          >
+            <Menu size={24} />
+          </button>
           <span className="font-bold text-lg">KM Automobiles</span>
         </div>
         <div className="hidden lg:block text-2xl font-black text-gray-800 capitalize tracking-tight">
@@ -186,19 +195,61 @@ const App: React.FC = () => {
       </main>
 
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-200 flex items-center justify-around px-2 py-3 z-50 shadow-2xl">
-        <MobileNavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard size={22} />} label="Dashboard" />
-        <MobileNavButton active={currentView === 'service'} onClick={() => setCurrentView('service')} icon={<Car size={22} />} label="service" />
+        <MobileNavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard size={22} />} label="Dash" />
+        <MobileNavButton active={currentView === 'service'} onClick={() => setCurrentView('service')} icon={<Car size={22} />} label="Jobs" />
         <div className="relative -top-6">
           <button onClick={handleAddNew} className="bg-blue-600 text-white p-4 rounded-[1.5rem] shadow-xl shadow-blue-300 ring-8 ring-slate-50 active:scale-90 transition transform"><PlusCircle size={28} /></button>
         </div>
-        <MobileNavButton active={currentView === 'marketing'} onClick={() => { setCurrentView('marketing'); setFilterCustomerId(null); }} icon={<Megaphone size={22} />} label="Promo" />
-        <MobileNavButton active={currentView === 'inventory'} onClick={() => { setCurrentView('inventory'); setFilterCustomerId(null); }} icon={<Package size={22} />} label="Stock" />
-
         <MobileNavButton active={currentView === 'invoices'} onClick={() => { setCurrentView('invoices'); setFilterCustomerId(null); }} icon={<FileText size={22} />} label="Bills" />
         <MobileNavButton active={currentView === 'reports'} onClick={() => { setCurrentView('reports'); setFilterCustomerId(null); }} icon={<BarChart3 size={22} />} label="Stats" />
-        <MobileNavButton active={currentView === 'branch'} onClick={() => { setCurrentView('branch'); setFilterCustomerId(null); }} icon={<Building2 size={22} />} label="Branch" />
-        <MobileNavButton active={currentView === 'settings'} onClick={() => { setCurrentView('settings'); setFilterCustomerId(null); }} icon={<Settings size={22} />} label="Setup" />
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-[60] animate-fade-in">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl animate-slide-in-left flex flex-col">
+            <div className="p-6 flex items-center justify-between border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-600 p-2 rounded-lg"><Wrench className="text-white w-5 h-5" /></div>
+                <span className="font-bold text-lg text-gray-800">Menu</span>
+              </div>
+              <button onClick={() => setIsMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition text-gray-400 hover:rotate-90 duration-300 transform">
+                <X size={20} />
+              </button>
+            </div>
+
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              {[
+                { view: 'customers', icon: <Users />, label: "Customers" },
+                { view: 'inventory', icon: <Package />, label: "Inventory" },
+                { view: 'marketing', icon: <Megaphone />, label: "Marketing" },
+                { view: 'branch', icon: <Building2 />, label: "Branch" },
+                { view: 'settings', icon: <Settings />, label: "Settings" }
+              ].map((item, idx) => (
+                <div
+                  key={item.view}
+                  className="animate-slide-in-up fill-mode-both"
+                  style={{ animationDelay: `${idx * 70}ms` }}
+                >
+                  <NavButton
+                    active={currentView === item.view}
+                    onClick={() => { setCurrentView(item.view as any); setFilterCustomerId(null); setIsMenuOpen(false); }}
+                    icon={item.icon}
+                    label={item.label}
+                  />
+                </div>
+              ))}
+            </nav>
+
+            <div className="p-4 border-t border-gray-100 animate-slide-in-up fill-mode-both" style={{ animationDelay: '400ms' }}>
+              <button onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center gap-3 w-full px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-xl transition">
+                <LogOut size={20} /> <span className="font-medium">Sign Out</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 };
