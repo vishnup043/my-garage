@@ -1,15 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Wrench, 
-  Users, 
-  PlusCircle, 
-  Search, 
+import {
+  LayoutDashboard,
+  Wrench,
+  Users,
+  PlusCircle,
+  Search,
   LogOut,
   Car,
   Megaphone,
-  Loader2
+  Loader2,
+  Package,
+  Calendar,
+  Truck,
+  FileText,
+  Settings,
+  BarChart3,
+  Building2
 } from 'lucide-react';
 // Fixed: Removed non-existent 'Vehicle' import
 import { AppView, Job, Customer, JobStatus } from './types';
@@ -19,6 +26,12 @@ import JobList from './components/JobList';
 import CustomerList from './components/CustomerList';
 import AddJobForm from './components/AddJobForm';
 import MarketingView from './components/MarketingView';
+import InventoryView from './components/InventoryView';
+
+import InvoiceView from './components/InvoiceView';
+import SettingsView from './components/SettingsView';
+import ReportsView from './components/ReportsView';
+import BranchView from './components/BranchView';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>('dashboard');
@@ -121,7 +134,13 @@ const App: React.FC = () => {
           <NavButton active={currentView === 'dashboard'} onClick={() => { setCurrentView('dashboard'); setFilterCustomerId(null); }} icon={<LayoutDashboard />} label="Dashboard" />
           <NavButton active={currentView === 'service'} onClick={() => setCurrentView('service')} icon={<Car />} label="Active Jobs" />
           <NavButton active={currentView === 'customers'} onClick={() => { setCurrentView('customers'); setFilterCustomerId(null); }} icon={<Users />} label="Customers" />
+          <NavButton active={currentView === 'inventory'} onClick={() => { setCurrentView('inventory'); setFilterCustomerId(null); }} icon={<Package />} label="Inventory" />
+
+          <NavButton active={currentView === 'invoices'} onClick={() => { setCurrentView('invoices'); setFilterCustomerId(null); }} icon={<FileText />} label="Invoices" />
           <NavButton active={currentView === 'marketing'} onClick={() => { setCurrentView('marketing'); setFilterCustomerId(null); }} icon={<Megaphone />} label="Marketing" />
+          <NavButton active={currentView === 'reports'} onClick={() => { setCurrentView('reports'); setFilterCustomerId(null); }} icon={<BarChart3 />} label="Reports" />
+          <NavButton active={currentView === 'branch'} onClick={() => { setCurrentView('branch'); setFilterCustomerId(null); }} icon={<Building2 />} label="Branch" />
+          <NavButton active={currentView === 'settings'} onClick={() => { setCurrentView('settings'); setFilterCustomerId(null); }} icon={<Settings />} label="Settings" />
           <NavButton active={currentView === 'add-job'} onClick={handleAddNew} icon={<PlusCircle />} label="New Service" />
         </nav>
         <div className="p-4 border-t border-gray-100">
@@ -140,8 +159,8 @@ const App: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <div className="relative group">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Quick Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -157,6 +176,12 @@ const App: React.FC = () => {
         {currentView === 'service' && <JobList searchTerm={searchTerm} onEditJob={handleEditJob} filterCustomerId={filterCustomerId} onClearFilter={handleClearFilter} />}
         {currentView === 'customers' && <CustomerList searchTerm={searchTerm} onViewHistory={handleViewHistory} />}
         {currentView === 'marketing' && <MarketingView onBack={() => setCurrentView('dashboard')} />}
+        {currentView === 'inventory' && <InventoryView onBack={() => setCurrentView('dashboard')} />}
+
+        {currentView === 'invoices' && <InvoiceView onBack={() => setCurrentView('dashboard')} />}
+        {currentView === 'reports' && <ReportsView onBack={() => setCurrentView('dashboard')} />}
+        {currentView === 'settings' && <SettingsView onBack={() => setCurrentView('dashboard')} />}
+        {currentView === 'branch' && <BranchView onBack={() => setCurrentView('dashboard')} />}
         {currentView === 'add-job' && <AddJobForm jobId={editingJobId} onSuccess={() => { setEditingJobId(null); setCurrentView('service'); }} />}
       </main>
 
@@ -167,7 +192,12 @@ const App: React.FC = () => {
           <button onClick={handleAddNew} className="bg-blue-600 text-white p-4 rounded-[1.5rem] shadow-xl shadow-blue-300 ring-8 ring-slate-50 active:scale-90 transition transform"><PlusCircle size={28} /></button>
         </div>
         <MobileNavButton active={currentView === 'marketing'} onClick={() => { setCurrentView('marketing'); setFilterCustomerId(null); }} icon={<Megaphone size={22} />} label="Promo" />
-        <MobileNavButton active={currentView === 'customers'} onClick={() => { setCurrentView('customers'); setFilterCustomerId(null); }} icon={<Users size={22} />} label="Clients" />
+        <MobileNavButton active={currentView === 'inventory'} onClick={() => { setCurrentView('inventory'); setFilterCustomerId(null); }} icon={<Package size={22} />} label="Stock" />
+
+        <MobileNavButton active={currentView === 'invoices'} onClick={() => { setCurrentView('invoices'); setFilterCustomerId(null); }} icon={<FileText size={22} />} label="Bills" />
+        <MobileNavButton active={currentView === 'reports'} onClick={() => { setCurrentView('reports'); setFilterCustomerId(null); }} icon={<BarChart3 size={22} />} label="Stats" />
+        <MobileNavButton active={currentView === 'branch'} onClick={() => { setCurrentView('branch'); setFilterCustomerId(null); }} icon={<Building2 size={22} />} label="Branch" />
+        <MobileNavButton active={currentView === 'settings'} onClick={() => { setCurrentView('settings'); setFilterCustomerId(null); }} icon={<Settings size={22} />} label="Setup" />
       </nav>
     </div>
   );

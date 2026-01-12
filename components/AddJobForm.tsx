@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User, 
-  Car, 
-  Wrench, 
+import {
+  User,
+  Car,
+  Wrench,
   CheckCircle,
   ArrowRight,
   ChevronLeft,
@@ -75,20 +75,21 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
     } else {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      setFormData(prev => ({...prev, deliveryDate: tomorrow.toISOString().split('T')[0]}));
+      setFormData(prev => ({ ...prev, deliveryDate: tomorrow.toISOString().split('T')[0] }));
     }
   }, [jobId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const existingJob = jobId ? db.getJobs().find(j => j.id === jobId) : null;
       const jId = jobId || Math.random().toString(36).substr(2, 9);
 
       const job: Job = {
-        id: jId,
+        ...existingJob,
+        id: existingJob?.id || (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11)),
         customerName: formData.name,
         customerMobile: formData.mobile,
         customerAddress: formData.address,
@@ -139,10 +140,10 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
         </div>
         <h2 className="text-3xl font-black text-gray-800 mb-2">Registration Done!</h2>
         <p className="text-gray-500 font-medium mb-10">The job for {formData.vehicleNumber} has been successfully logged.</p>
-        
+
         <div className="space-y-4">
           {inviteToGroup && db.getConfig().groupInviteLink && (
-            <button 
+            <button
               onClick={handleSendInvite}
               className="w-full flex items-center justify-center gap-3 bg-emerald-600 text-white font-black py-5 rounded-[1.5rem] shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition active:scale-95"
             >
@@ -150,7 +151,7 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
               Send WhatsApp Invite
             </button>
           )}
-          <button 
+          <button
             onClick={onSuccess}
             className="w-full text-gray-500 font-bold py-4 hover:bg-gray-100 rounded-[1.5rem] transition"
           >
@@ -183,10 +184,10 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
               <User size={20} /> <h3 className="font-bold">Customer Profile</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Customer Name" required value={formData.name} onChange={v => setFormData({...formData, name: v})} />
-              <Input label="WhatsApp Phone" required type="tel" placeholder="e.g. 9876543210" value={formData.mobile} onChange={v => setFormData({...formData, mobile: v})} />
+              <Input label="Customer Name" required value={formData.name} onChange={v => setFormData({ ...formData, name: v })} />
+              <Input label="WhatsApp Phone" required type="tel" placeholder="e.g. 9876543210" value={formData.mobile} onChange={v => setFormData({ ...formData, mobile: v })} />
               <div className="md:col-span-2">
-                <Input label="Residential Locality" value={formData.address} onChange={v => setFormData({...formData, address: v})} />
+                <Input label="Residential Locality" value={formData.address} onChange={v => setFormData({ ...formData, address: v })} />
               </div>
             </div>
             <button type="button" onClick={() => setStep(2)} className="w-full mt-6 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-4 rounded-2xl hover:bg-blue-700 transition active:scale-95 shadow-lg shadow-blue-100">
@@ -204,12 +205,12 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
               <Car size={20} /> <h3 className="font-bold">Vehicle Details</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Plate Number" placeholder="e.g. MH 12 AB 1234" required value={formData.vehicleNumber} onChange={v => setFormData({...formData, vehicleNumber: v})} />
-              <Input label="Manufacturer" placeholder="e.g. Maruti" required value={formData.brand} onChange={v => setFormData({...formData, brand: v})} />
-              <Input label="Model Name" placeholder="e.g. Swift" required value={formData.model} onChange={v => setFormData({...formData, model: v})} />
+              <Input label="Plate Number" placeholder="e.g. MH 12 AB 1234" required value={formData.vehicleNumber} onChange={v => setFormData({ ...formData, vehicleNumber: v })} />
+              <Input label="Manufacturer" placeholder="e.g. Maruti" required value={formData.brand} onChange={v => setFormData({ ...formData, brand: v })} />
+              <Input label="Model Name" placeholder="e.g. Swift" required value={formData.model} onChange={v => setFormData({ ...formData, model: v })} />
               <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Type</label>
-                <select className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 transition" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})}>
+                <select className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 transition" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
                   <option>Car</option><option>SUV</option><option>Hatchback</option><option>Sedan</option><option>Luxury</option>
                 </select>
               </div>
@@ -229,10 +230,10 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
               <Wrench size={20} /> <h3 className="font-bold">Service Details</h3>
             </div>
             <div className="space-y-4">
-              <textarea rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 transition resize-none" placeholder="Work description..." value={formData.services} onChange={e => setFormData({...formData, services: e.target.value})} />
+              <textarea rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 transition resize-none" placeholder="Work description..." value={formData.services} onChange={e => setFormData({ ...formData, services: e.target.value })} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Estimated Handover" type="date" min={todayStr} required value={formData.deliveryDate} onChange={v => setFormData({...formData, deliveryDate: v})} />
-                <Input label="Estimated Charges (₹)" type="number" value={formData.charges} onChange={v => setFormData({...formData, charges: v})} />
+                <Input label="Estimated Handover" type="date" min={todayStr} required value={formData.deliveryDate} onChange={v => setFormData({ ...formData, deliveryDate: v })} />
+                <Input label="Estimated Charges (₹)" type="number" value={formData.charges} onChange={v => setFormData({ ...formData, charges: v })} />
               </div>
               {!jobId && db.getConfig().groupInviteLink && (
                 <div onClick={() => setInviteToGroup(!inviteToGroup)} className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${inviteToGroup ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}>
@@ -251,8 +252,8 @@ const AddJobForm: React.FC<AddJobFormProps> = ({ jobId, onSuccess }) => {
                 </div>
               )}
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={isSubmitting}
               className="w-full mt-6 flex items-center justify-center gap-2 bg-emerald-600 text-white font-black py-4 rounded-2xl hover:bg-emerald-700 transition active:scale-95 shadow-xl shadow-emerald-100 disabled:opacity-50"
             >
